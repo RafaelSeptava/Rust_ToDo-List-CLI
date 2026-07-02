@@ -45,6 +45,7 @@ impl TodoList {
         }
 
         println!("\n-----Daftar To-Do List-----");
+
         for task in &self.tasks {
             let status_marker = match task.status {
                 Status::Todo        => "[ ]",
@@ -69,12 +70,28 @@ impl TodoList {
             false
         }
     }
+
+    fn deleted_task(&mut self, id: u32) -> bool {
+        let original_length = self.tasks.len();
+
+        self.tasks.retain(|task| task.id != id);
+
+        if self.tasks.len() < original_length {
+            println!("Task #{} berhasil dihapus!", id);
+            true
+        }
+
+        else {
+            println!("Task dengan ID #{} tidak ditemukan!", id);
+            false
+        }
+    }
 }
 
 fn main() {
     println!("To-Do List CLI");
-    println!("Command: add<task> | list | complete <id> | exit");
-    println!("================================================");
+    println!("Command: add<task> | list | complete <id> | delete <id> | exit");
+    println!("==============================================================");
 
     let mut todo_list = TodoList::default();
 
@@ -140,13 +157,31 @@ fn main() {
                 }
             }
 
+            "delete" => {
+                if let Some(id_str) = argument {
+                    match id_str.parse::<u32>() {
+                        Ok(id)  => {
+                            todo_list.deleted_task(id);
+                        }
+
+                        Err(_)  => {
+                            println!("Error!!! Masukkan angka yang valid untuk task ID!");
+                        }
+                    }
+                }
+
+                else {
+                    println!("Error!!! command 'delete' membutuhkan task ID!");
+                }
+            }
+
             "exit" => {
                 println!("Keluar program...");
                 break;
             }
 
             _   => {
-                println!("Command tidak diketahui! Gunakan 'add', 'list', 'complete', atau 'exit'");
+                println!("Command tidak diketahui! Gunakan 'add', 'list', 'complete', 'delete', atau 'exit'");
             }
         }  
     }

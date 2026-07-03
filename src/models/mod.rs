@@ -1,15 +1,17 @@
+// mod.rs
 pub mod todo_list;
+
 
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Status {
-    Todo,
+    Todo, 
     Completed,
 }
 
 #[derive(Debug, Clone)]
 pub struct Task {
-    id: u32,
-    description: String,
+    id: u32, 
+    description: String, 
     status: Status,
 }
 
